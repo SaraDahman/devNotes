@@ -19,7 +19,7 @@ if (env.nodeEnv === "production") {
   const clientDist = path.join(__dirname, "../../client/dist");
 
   app.use(express.static(clientDist));
-  app.get("*", (req, res) => {
+  app.get("/{*splat}", (req, res) => {
     res.sendFile(path.join(clientDist, "index.html"));
   });
 }
