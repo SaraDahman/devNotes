@@ -2,7 +2,7 @@ import * as noteRepository from "../repositories/note.repository.js";
 import * as folderRepository from "../repositories/folder.repository.js";
 import { ApiError } from "../utils/api-error.js";
 
-export async function getNotes(folderId) {
+export async function getNotes({ folderId, favorite }) {
   if (folderId) {
     const folder = await folderRepository.findById(folderId);
 
@@ -11,7 +11,11 @@ export async function getNotes(folderId) {
     }
   }
 
-  return noteRepository.findAll(folderId);
+  return noteRepository.findAll({ folderId, favorite });
+}
+
+export async function getOtherNotes() {
+  return noteRepository.findOthers();
 }
 
 export async function getNoteById(id) {

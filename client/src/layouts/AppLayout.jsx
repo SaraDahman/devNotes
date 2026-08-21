@@ -7,6 +7,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { PanelLeft, Plus } from "lucide-react";
+import { FolderProvider } from "@/context/FolderContext";
 
 function HeaderSidebarToggle() {
   const { toggleSidebar } = useSidebar();
@@ -26,22 +27,24 @@ function HeaderSidebarToggle() {
 
 export default function AppLayout() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="sticky top-0 flex h-12 shrink-0 items-center gap-3 border-b border-border px-4">
-          <HeaderSidebarToggle />
-          <div className="ml-auto flex items-center gap-2">
-            <Button size="sm" className="h-8 gap-1.5">
-              <Plus className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">New Note</span>
-            </Button>
+    <FolderProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="sticky top-0 flex h-12 shrink-0 items-center gap-3 border-b border-border px-4">
+            <HeaderSidebarToggle />
+            <div className="ml-auto flex items-center gap-2">
+              <Button size="sm" className="h-8 gap-1.5">
+                <Plus className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">New Note</span>
+              </Button>
+            </div>
+          </header>
+          <div className="p-4">
+            <Outlet />
           </div>
-        </header>
-        <div className="p-4">
-          <Outlet />
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        </SidebarInset>
+      </SidebarProvider>
+    </FolderProvider>
   );
 }

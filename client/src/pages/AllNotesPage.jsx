@@ -1,12 +1,9 @@
-import { useSearchParams } from "react-router-dom";
-import { useNotes } from "@/hooks/use-notes";
+import { useAllNotes } from "@/hooks/use-notes";
 import NoteCard from "@/components/common/NoteCard";
 import EmptyMessage from "@/components/common/EmptyMessage";
 
-export default function NotesPage() {
-  const [searchParams] = useSearchParams();
-  const folderId = searchParams.get("folder");
-  const { data: notes, isLoading } = useNotes(folderId);
+export default function AllNotesPage() {
+  const { data: notes, isLoading } = useAllNotes();
 
   if (isLoading) {
     return <div className="text-muted-foreground">Loading notes...</div>;
@@ -19,7 +16,7 @@ export default function NotesPage() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {notes.map((note) => (
-        <NoteCard key={note.id} note={note} />
+        <NoteCard key={note.id} note={note} showFolderBadge />
       ))}
     </div>
   );

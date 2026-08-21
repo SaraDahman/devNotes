@@ -1,12 +1,9 @@
-import { useSearchParams } from "react-router-dom";
-import { useNotes } from "@/hooks/use-notes";
+import { useOtherNotes } from "@/hooks/use-notes";
 import NoteCard from "@/components/common/NoteCard";
 import EmptyMessage from "@/components/common/EmptyMessage";
 
-export default function NotesPage() {
-  const [searchParams] = useSearchParams();
-  const folderId = searchParams.get("folder");
-  const { data: notes, isLoading } = useNotes(folderId);
+export default function OtherNotesPage() {
+  const { data: notes, isLoading } = useOtherNotes();
 
   if (isLoading) {
     return <div className="text-muted-foreground">Loading notes...</div>;
