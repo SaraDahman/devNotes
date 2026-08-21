@@ -18,5 +18,6 @@ export function fromNow(date) {
 }
 
 export function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, "");
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
 }

@@ -4,23 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Star } from "lucide-react";
 import { stripHtml, fromNow } from "@/lib/utils";
-import NoteDrawer from "./NoteDrawer";
 import DeleteAlert from "./DeleteAlert";
 import { cn } from "@/lib/utils";
+import { useDeleteNote } from "@/hooks/use-notes";
+import { useNoteDrawer } from "@/context/NoteDrawerContext";
 
 export default function NoteCard({ note, showFolderBadge = false }) {
-  const [open, setOpen] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const deleteNote = useDeleteNote();
+  const { openDrawer } = useNoteDrawer();
 
   const handleDelete = () => {
-    console.log("Deleting note:", note.id);
+    deleteNote.mutate(note.id, {
+      onSuccess: () => setShowDelete(false),
+    });
   };
 
   return (
     <>
       <Card
         className="flex flex-col cursor-pointer transition-colors hover:bg-accent/50 p-3"
-        onClick={() => setOpen(true)}
+        onClick={() => openDrawer(note)}
       >
         <CardHeader className="p-0 flex items-center justify-between">
           <CardTitle className="flex items-center gap-1.5">
@@ -63,7 +67,6 @@ export default function NoteCard({ note, showFolderBadge = false }) {
         </div>
       </Card>
 
-      <NoteDrawer note={note} open={open} onOpenChange={setOpen} />
       <DeleteAlert
         open={showDelete}
         onOpenChange={setShowDelete}

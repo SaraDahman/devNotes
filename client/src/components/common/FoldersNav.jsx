@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Folder, Trash2 } from "lucide-react";
-import { useFolderContext } from "@/context/FolderContext";
+import { useFolders, useDeleteFolder } from "@/hooks/use-folders";
 
 import {
   SidebarGroup,
@@ -15,13 +15,30 @@ import { Button } from "../ui/button";
 import DeleteAlert from "./DeleteAlert";
 
 export default function FoldersNav() {
-  const { folders, isLoading, activeFolderId, handleDeleteFolder } =
-    useFolderContext();
+  const { data: folders, isLoading } = useFolders();
+  const deleteFolder = useDeleteFolder();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const activeFolderId = searchParams.get("folder");
   const [deleteId, setDeleteId] = useState(null);
 
   const handleDelete = () => {
-    handleDeleteFolder(deleteId, () => setDeleteId(null));
+    deleteFolder.mutate(deleteId, {
+      onSuccess: () => {
+        setDeleteId(null);
+
+        if (activeFolderId == deleteId) {
+          const remaining = folders.filter((f) => f.id !== deleteId);
+          const next = remaining[0];
+
+          if (next) {
+            navigate(`/notes?folder=${next.id}`, { replace: true });
+          } else {
+            navigate("/notes/favorite");
+          }
+        }
+      },
+    });
   };
 
   if (isLoading) return null;
