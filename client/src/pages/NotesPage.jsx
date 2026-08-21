@@ -16,8 +16,6 @@ export default function NotesPage() {
     return <EmptyMessage />;
   }
 
-  console.log(notes);
-
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {notes.map((note) => (

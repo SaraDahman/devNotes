@@ -6,17 +6,26 @@ import { Trash2, Star } from "lucide-react";
 import { stripHtml, fromNow } from "@/lib/utils";
 import DeleteAlert from "./DeleteAlert";
 import { cn } from "@/lib/utils";
-import { useDeleteNote } from "@/hooks/use-notes";
+import { useDeleteNote, useUpdateNote } from "@/hooks/use-notes";
 import { useNoteDrawer } from "@/context/NoteDrawerContext";
 
 export default function NoteCard({ note, showFolderBadge = false }) {
   const [showDelete, setShowDelete] = useState(false);
   const deleteNote = useDeleteNote();
+  const updateNote = useUpdateNote();
   const { openDrawer } = useNoteDrawer();
 
   const handleDelete = () => {
     deleteNote.mutate(note.id, {
       onSuccess: () => setShowDelete(false),
+    });
+  };
+
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation();
+    updateNote.mutate({
+      id: note.id,
+      note: { ...note, folderId: note.folder_id, favorite: !note.favorite },
     });
   };
 
@@ -28,7 +37,17 @@ export default function NoteCard({ note, showFolderBadge = false }) {
       >
         <CardHeader className="p-0 flex items-center justify-between">
           <CardTitle className="flex items-center gap-1.5">
-            <Star className="w-4 h-4" fill={note.favorite ? "currentColor" : "none"} />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={handleToggleFavorite}
+            >
+              <Star
+                className="w-4 h-4"
+                fill={note.favorite ? "currentColor" : "none"}
+              />
+            </Button>
             {note.title}
           </CardTitle>
 

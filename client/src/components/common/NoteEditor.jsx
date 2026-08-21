@@ -41,7 +41,6 @@ const formats = [
   "image",
   "link",
   "list",
-  "bullet",
   "blockquote",
   "code-block",
 ];

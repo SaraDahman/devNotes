@@ -54,10 +54,7 @@ export default function NoteDrawer() {
         { onSuccess: closeDrawer },
       );
     } else {
-      createNote.mutate(
-        { ...data, folderId },
-        { onSuccess: closeDrawer },
-      );
+      createNote.mutate({ ...data, folderId }, { onSuccess: closeDrawer });
     }
   };
 
@@ -71,13 +68,13 @@ export default function NoteDrawer() {
               placeholder="Untitled"
               className="h-auto border-none bg-transparent px-0 text-2xl font-bold text-foreground shadow-none focus-visible:ring-0 placeholder:text-muted-foreground"
             />
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="mt-1 h-8 w-8 shrink-0 rounded-full border border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             >
               <MoreHorizontal className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         </DrawerHeader>
 
@@ -99,7 +96,12 @@ export default function NoteDrawer() {
           <DrawerClose variant="outline">Cancel</DrawerClose>
           <Button
             onClick={form.handleSubmit(handleSave)}
-            disabled={createNote.isPending || updateNote.isPending || !form.watch("title") || !form.watch("content")}
+            disabled={
+              createNote.isPending ||
+              updateNote.isPending ||
+              !form.watch("title") ||
+              !form.watch("content")
+            }
           >
             Save
           </Button>
