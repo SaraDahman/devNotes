@@ -1,43 +1,61 @@
 import pool from "../db/pool.js";
 
-export async function findAll(folderId = null) {
-  if (folderId) {
-    const result = await pool.query(
-      `
-        SELECT
-          n.id,
-          n.title,
-          n.content,
-          n.folder_id,
-          n.favorite,
-          n.created_at,
-          n.updated_at,
-          f.name AS folder_name
-        FROM notes n
-        LEFT JOIN folders f ON f.id = n.folder_id
-        WHERE n.folder_id = $1
-        ORDER BY n.updated_at DESC
-      `,
-      [folderId],
-    );
+export async function findAll({ folderId = null, favorite = null } = {}) {
+  const conditions = [];
+  const params = [];
 
-    return result.rows;
+  if (folderId) {
+    params.push(folderId);
+    conditions.push(`n.folder_id = $${params.length}`);
   }
 
-  const result = await pool.query(`
-    SELECT
-      n.id,
-      n.title,
-      n.content,
-      n.folder_id,
-      n.favorite,
-      n.created_at,
-      n.updated_at,
-      f.name AS folder_name
-    FROM notes n
-    LEFT JOIN folders f ON f.id = n.folder_id
-    ORDER BY n.updated_at DESC
-  `);
+  if (favorite !== null) {
+    params.push(favorite === "true" || favorite === true);
+    conditions.push(`n.favorite = $${params.length}`);
+  }
+
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+
+  const result = await pool.query(
+    `
+      SELECT
+        n.id,
+        n.title,
+        n.content,
+        n.folder_id,
+        n.favorite,
+        n.created_at,
+        n.updated_at,
+        f.name AS folder_name
+      FROM notes n
+      LEFT JOIN folders f ON f.id = n.folder_id
+      ${where}
+      ORDER BY n.updated_at DESC
+    `,
+    params,
+  );
+
+  return result.rows;
+}
+
+export async function findOthers() {
+  const result = await pool.query(
+    `
+      SELECT
+        n.id,
+        n.title,
+        n.content,
+        n.folder_id,
+        n.favorite,
+        n.created_at,
+        n.updated_at,
+        f.name AS folder_name
+      FROM notes n
+      LEFT JOIN folders f ON f.id = n.folder_id
+      WHERE n.folder_id IS NULL
+      ORDER BY n.updated_at DESC
+    `,
+  );
 
   return result.rows;
 }

@@ -1,20 +1,24 @@
-import * as React from "react";
+import { useState } from "react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarHeader,
 } from "@/components/ui/sidebar";
-// import Workspaceswitcher from "../../../features/workspaces/components/Workspaceswitcher";
-// import TeamsNav from "./TeamsNav";
-// import TopNav from "./TopNav";
-// import UserNav from "./UserNav";
+import { Star } from "lucide-react";
+
 import FoldersNav from "./FoldersNav";
-import { Button } from "../ui/button";
+import MainNav from "./MainNav";
+import CreateFolderDialog from "./CreateFolderDialog";
 
 export default function AppSidebar({ ...props }) {
+  const [showCreate, setShowCreate] = useState(false);
+
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -22,13 +26,21 @@ export default function AppSidebar({ ...props }) {
       className="overflow-hidden bg-background"
     >
       {/* <SidebarHeader>
-        <h1 className="text-xl font-bold">Dev Notes</h1>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="flex gap-2 text-chart-5">
+              <Star size={4} />
+              <span>Favorite</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader> */}
       <SidebarContent>
+        <MainNav />
         <FoldersNav />
       </SidebarContent>
       <SidebarFooter>
-        <Button>Create Folder</Button>
+        <CreateFolderDialog />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
